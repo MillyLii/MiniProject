@@ -400,7 +400,7 @@ async function loadBookingsForDate() {
         }
 
         showBookingListMessage(`${bookings.length} booking(s) for ${date}.`, false);
-        bookings.forEach(booking => renderBookingItem(booking, bookingList, false));
+        bookings.forEach(booking => renderBookingItem(booking, bookingList, true));
     } catch (error) {
         showBookingListMessage(error.message, true);
     }
