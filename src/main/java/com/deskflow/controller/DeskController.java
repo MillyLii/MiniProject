@@ -3,7 +3,9 @@ package com.deskflow.controller;
 import com.deskflow.model.Desk;
 import com.deskflow.repository.DeskRepository;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,6 +55,16 @@ public class DeskController {
             @RequestParam(required = false)
             Boolean hasMonitor
     ) {
+        LocalDate today = LocalDate.now();
+        LocalDate latest = today.plusDays(6);
+        if (date.isBefore(today) || date.isAfter(latest)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Availability can only be queried from today through the next 7 days ("
+                            + today + " to " + latest + ")"
+            );
+        }
+
         return deskRepository.findAvailableDesks(
                 date,
                 floor,

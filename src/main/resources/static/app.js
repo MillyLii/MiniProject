@@ -30,13 +30,47 @@ const employeeBadge = document.getElementById("employeeBadge");
 let allDesks = [];
 let selectedDeskId = null;
 
-const today = new Date().toISOString().split("T")[0];
+function formatLocalDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+}
+
+const todayDate = new Date();
+todayDate.setHours(0, 0, 0, 0);
+const maxBookable = new Date(todayDate);
+maxBookable.setDate(maxBookable.getDate() + 6);
+
+const today = formatLocalDate(todayDate);
+const maxBookableDate = formatLocalDate(maxBookable);
+
+dateInput.min = today;
+dateInput.max = maxBookableDate;
+bookingDateInput.min = today;
+bookingDateInput.max = maxBookableDate;
 
 dateInput.value = today;
 bookingDateInput.value = today;
 employeeNameInput.value = employeeName;
 employeeBadge.textContent = employeeName;
 document.title = `DeskFlow — ${employeeName}`;
+
+function isDateWithinBookingWindow(dateValue) {
+    return Boolean(dateValue) &&
+        dateValue >= today &&
+        dateValue <= maxBookableDate;
+}
+
+function updateActiveDesksCount(availableCount, forDate) {
+    document.getElementById("activeDesks").textContent = availableCount;
+    const hint = document.getElementById("activeDesksHint");
+    if (hint) {
+        hint.textContent = forDate
+            ? `Free on ${forDate}`
+            : "Free on selected date";
+    }
+}
 
 async function checkHealth() {
     try {
@@ -71,12 +105,10 @@ async function loadDeskDatabase() {
 
 function updateOfficeStatistics() {
     const totalDesks = allDesks.length;
-    const activeDesks = allDesks.filter(desk => desk.active).length;
     const monitorDesks = allDesks.filter(desk => desk.hasMonitor).length;
     const floors = [...new Set(allDesks.map(desk => desk.floor))];
 
     document.getElementById("totalDesks").textContent = totalDesks;
-    document.getElementById("activeDesks").textContent = activeDesks;
     document.getElementById("monitorDesks").textContent = monitorDesks;
     document.getElementById("floorCount").textContent = floors.length;
 }
@@ -103,7 +135,35 @@ async function loadAvailableDesks() {
 
     if (!date) {
         showMessage("Please select a date.", true);
+        updateActiveDesksCount(0, null);
         return;
+    }
+
+    if (!isDateWithinBookingWindow(date)) {
+        showMessage(
+            `You can only search and book from ${today} to ${maxBookableDate} (7 days).`,
+            true
+        );
+        updateActiveDesksCount(0, date);
+        deskList.innerHTML = `
+            <div class="empty-state">
+                Choose a date within the next 7 days.
+            </div>
+        `;
+        return;
+    }
+
+    // Unfiltered availability drives the Active Desks counter.
+    try {
+        const countResponse = await fetch(
+            `/api/desks/available?date=${encodeURIComponent(date)}`
+        );
+        if (countResponse.ok) {
+            const allAvailable = await countResponse.json();
+            updateActiveDesksCount(allAvailable.length, date);
+        }
+    } catch (error) {
+        console.error(error);
     }
 
     const query = new URLSearchParams();
@@ -209,6 +269,14 @@ bookingForm.addEventListener("submit", async function (event) {
 
     if (!bookingDate) {
         showBookingMessage("Please select a booking date.", true);
+        return;
+    }
+
+    if (!isDateWithinBookingWindow(bookingDate)) {
+        showBookingMessage(
+            `Bookings are only allowed from ${today} to ${maxBookableDate} (next 7 days).`,
+            true
+        );
         return;
     }
 

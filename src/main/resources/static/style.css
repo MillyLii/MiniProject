@@ -192,6 +192,13 @@ main {
     color: #5a6b7d;
 }
 
+.stat-hint {
+    display: block;
+    margin-top: 8px;
+    color: #7a8a9a;
+    font-size: 12px;
+}
+
 .stat-card strong {
     font-size: 32px;
     color: var(--fi-blue);

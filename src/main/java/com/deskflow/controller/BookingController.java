@@ -57,6 +57,16 @@ public class BookingController {
             );
         }
 
+        LocalDate today = LocalDate.now();
+        LocalDate latest = today.plusDays(6);
+        if (request.date().isBefore(today) || request.date().isAfter(latest)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Bookings are only allowed from today through the next 7 days ("
+                            + today + " to " + latest + ")"
+            );
+        }
+
         if (bookingRepository.existsByDeskIdAndDate(
                 request.deskId(),
                 request.date()
