@@ -3,72 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>DeskFlow</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
 
-<header>
-    <h1>DeskFlow</h1>
-    <p>Finnish Office Hot Desk Booking</p>
+<header class="main-header">
+    <div>
+        <h1>DeskFlow</h1>
+        <p>Finnish Office Hot Desk Booking</p>
+    </div>
+
+    <div id="healthStatus" class="health-status">
+        Checking API...
+    </div>
 </header>
 
 <main>
+
+    <!-- Database overview -->
     <section class="card">
-        <h2>Find Available Desks</h2>
+        <div class="section-heading">
+            <div>
+                <h2>Office Overview</h2>
+                <p>Live information loaded from the DeskFlow database.</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Desks</span>
+                <strong id="totalDesks">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Active Desks</span>
+                <strong id="activeDesks">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Monitor Desks</span>
+                <strong id="monitorDesks">0</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Floors</span>
+                <strong id="floorCount">0</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- Availability search -->
+    <section class="card">
+        <div class="section-heading">
+            <div>
+                <h2>Find Available Desks</h2>
+                <p>Search active desks that have not been booked.</p>
+            </div>
+        </div>
 
         <div class="form-row">
-            <div>
+
+            <div class="form-group">
                 <label for="date">Date</label>
                 <input type="date" id="date">
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="floor">Floor</label>
+
                 <select id="floor">
                     <option value="">All floors</option>
-                    <option value="2">Floor 2</option>
-                    <option value="3">Floor 3</option>
                 </select>
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="monitor">Monitor</label>
+
                 <select id="monitor">
                     <option value="">Any</option>
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                 </select>
             </div>
+
         </div>
 
-        <button onclick="loadAvailableDesks()">Search Desks</button>
+        <button id="searchButton" type="button">
+            Search Desks
+        </button>
 
-        <p id="message"></p>
+        <p id="message" class="message"></p>
 
         <div id="deskList" class="desk-grid"></div>
     </section>
 
-    <section class="card">
-        <h2>Create Booking</h2>
+    <!-- Create booking -->
+    <section class="card" id="createBookingSection">
+        <div class="section-heading">
+            <div>
+                <h2>Create Booking</h2>
+                <p>Select an available desk and enter the employee name.</p>
+            </div>
+        </div>
 
         <form id="bookingForm">
-            <label for="deskId">Desk ID</label>
-            <input type="number" id="deskId" required>
 
-            <label for="employeeName">Employee Name</label>
-            <input type="text" id="employeeName" required>
+            <div class="form-row">
 
-            <label for="bookingDate">Booking Date</label>
-            <input type="date" id="bookingDate" required>
+                <div class="form-group">
+                    <label for="deskId">Desk ID</label>
 
-            <button type="submit">Book Desk</button>
+                    <input
+                        type="number"
+                        id="deskId"
+                        placeholder="Select a desk above"
+                        readonly
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="selectedDeskCode">Desk Code</label>
+
+                    <input
+                        type="text"
+                        id="selectedDeskCode"
+                        placeholder="No desk selected"
+                        readonly
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+
+                    <input
+                        type="text"
+                        id="employeeName"
+                        placeholder="For example: Anna Kowalska"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+
+                    <input
+                        type="date"
+                        id="bookingDate"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button type="submit">
+                Book Desk
+            </button>
         </form>
 
-        <p id="bookingMessage"></p>
+        <p id="bookingMessage" class="message"></p>
     </section>
+
+    <!-- Existing bookings -->
+    <section class="card">
+        <div class="section-heading booking-heading">
+            <div>
+                <h2>Bookings for Selected Date</h2>
+
+                <p>
+                    Existing reservations from the database.
+                </p>
+            </div>
+
+            <button
+                id="refreshBookingsButton"
+                type="button"
+                class="secondary-button"
+            >
+                Refresh
+            </button>
+        </div>
+
+        <p id="bookingListMessage" class="message"></p>
+
+        <div id="bookingList" class="booking-list"></div>
+    </section>
+
 </main>
 
-<script src="app.js"></script>
+<script src="/app.js"></script>
+
 </body>
 </html>
