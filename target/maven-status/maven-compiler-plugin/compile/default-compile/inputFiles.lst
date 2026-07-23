@@ -1,0 +1,11 @@
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/DeskFlowApplication.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/config/DataSeeder.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/controller/BookingController.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/controller/DeskController.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/controller/HealthController.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/dto/BookingRequest.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/dto/BookingResponse.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/model/Booking.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/model/Desk.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/repository/BookingRepository.java
+/Users/jessiehan/Desktop/HSBC/MiniProject/src/main/java/com/deskflow/repository/DeskRepository.java
