@@ -17,8 +17,9 @@ cd MiniProject
 mvn spring-boot:run
 ```
 
-默认：`http://localhost:8080`  
-H2 控制台：`http://localhost:8080/h2-console`（JDBC URL 用 `jdbc:h2:mem:deskflow`）
+- 网页测试台：`http://localhost:8080/`（点按钮测全部接口）
+- API 根：`http://localhost:8080`
+- H2 控制台：`http://localhost:8080/h2-console`（JDBC URL 用 `jdbc:h2:mem:deskflow`）
 
 ---
 

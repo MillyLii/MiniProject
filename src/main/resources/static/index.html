@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DeskFlow API 测试台</title>
+  <style>
+    :root {
+      --bg: #f3f5f2;
+      --ink: #1a2421;
+      --muted: #5a6b64;
+      --line: #c9d4ce;
+      --card: #ffffff;
+      --accent: #0f6b4c;
+      --warn: #9a3412;
+      --ok: #166534;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(160deg, #e8efe9 0%, #f7f4ee 45%, #eef2f6 100%);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+    h1 { margin: 0 0 0.25rem; font-size: 1.75rem; letter-spacing: -0.02em; }
+    .lead { color: var(--muted); margin: 0 0 1.5rem; }
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem 1.1rem 1.15rem;
+      margin-bottom: 1rem;
+    }
+    h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: end; margin-bottom: 0.6rem; }
+    label { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.8rem; color: var(--muted); }
+    input, select, button, textarea {
+      font: inherit;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+    input, select { min-width: 8rem; background: #fff; color: var(--ink); }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      cursor: pointer;
+    }
+    button.secondary { background: #fff; color: var(--ink); }
+    button.danger { background: var(--warn); border-color: var(--warn); }
+    pre {
+      margin: 0.5rem 0 0;
+      padding: 0.75rem;
+      background: #0f1714;
+      color: #d7efe4;
+      border-radius: 8px;
+      overflow: auto;
+      font-size: 0.82rem;
+      min-height: 3rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .status { font-size: 0.85rem; color: var(--muted); }
+    .status.ok { color: var(--ok); }
+    .status.err { color: var(--warn); }
+    .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DeskFlow</h1>
+    <p class="lead">网页端测试台：覆盖 health / desks / bookings / 空闲桌 / 员工预订。</p>
+    <p class="hint">先启动 <code>mvn spring-boot:run</code>，再打开本页 <code>http://localhost:8080/</code>。</p>
+
+    <section>
+      <h2>1. Health</h2>
+      <div class="row">
+        <button type="button" onclick="runHealth()">GET /api/health</button>
+      </div>
+      <div class="status" id="health-status"></div>
+      <pre id="health-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>2. 列出桌子 GET /api/desks</h2>
+      <div class="row">
+        <label>floor（可选）
+          <input id="desk-floor" type="number" placeholder="例如 4" />
+        </label>
+        <label>hasMonitor（可选）
+          <select id="desk-monitor">
+            <option value="">不限</option>
+            <option value="true">true</option>
+            <option value="false">false</option>
+          </select>
+        </label>
+        <button type="button" onclick="runListDesks()">查询</button>
+      </div>
+      <div class="status" id="desks-status"></div>
+      <pre id="desks-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>3. 某日空闲桌（创意）GET /api/desks/available</h2>
+      <div class="row">
+        <label>date
+          <input id="avail-date" type="date" value="2026-07-24" />
+        </label>
+        <button type="button" onclick="runAvailable()">查询空闲</button>
+      </div>
+      <div class="status" id="avail-status"></div>
+      <pre id="avail-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>4. 创建预订 POST /api/bookings</h2>
+      <div class="row">
+        <label>deskId
+          <input id="book-desk" type="number" value="2" min="1" />
+        </label>
+        <label>employeeName
+          <input id="book-name" type="text" value="Test User" />
+        </label>
+        <label>date
+          <input id="book-date" type="date" value="2026-07-24" />
+        </label>
+        <button type="button" onclick="runCreateBooking()">创建</button>
+      </div>
+      <p class="hint">试冲突：deskId=1、date=2026-07-24 → 期望 409。试 inactive：deskId=4 → 期望 400。</p>
+      <div class="status" id="create-status"></div>
+      <pre id="create-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>5. 按日列出预订 GET /api/bookings?date=</h2>
+      <div class="row">
+        <label>date
+          <input id="list-date" type="date" value="2026-07-24" />
+        </label>
+        <button type="button" onclick="runListByDate()">按日查询</button>
+      </div>
+      <div class="status" id="list-date-status"></div>
+      <pre id="list-date-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>6. 按员工查询（创意）GET /api/bookings?employeeName=</h2>
+      <div class="row">
+        <label>employeeName
+          <input id="emp-name" type="text" value="Anna Kowalska" />
+        </label>
+        <button type="button" onclick="runListByEmployee()">按员工查询</button>
+      </div>
+      <div class="status" id="emp-status"></div>
+      <pre id="emp-out">等待请求…</pre>
+    </section>
+
+    <section>
+      <h2>7. 取消预订 DELETE /api/bookings/{id}</h2>
+      <div class="row">
+        <label>booking id
+          <input id="cancel-id" type="number" min="1" placeholder="先从上面查询得到 id" />
+        </label>
+        <button type="button" class="danger" onclick="runCancel()">取消</button>
+      </div>
+      <div class="status" id="cancel-status"></div>
+      <pre id="cancel-out">等待请求…</pre>
+    </section>
+  </main>
+
+  <script>
+    async function call(method, path, body) {
+      const opts = { method, headers: {} };
+      if (body !== undefined) {
+        opts.headers["Content-Type"] = "application/json";
+        opts.body = JSON.stringify(body);
+      }
+      const res = await fetch(path, opts);
+      const text = await res.text();
+      let data;
+      try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+      return { status: res.status, ok: res.ok, data };
+    }
+
+    function show(statusEl, outEl, result) {
+      statusEl.textContent = "HTTP " + result.status + (result.ok ? " OK" : " ERROR");
+      statusEl.className = "status " + (result.ok ? "ok" : "err");
+      outEl.textContent = typeof result.data === "string"
+        ? result.data
+        : JSON.stringify(result.data, null, 2);
+    }
+
+    async function runHealth() {
+      const r = await call("GET", "/api/health");
+      show(document.getElementById("health-status"), document.getElementById("health-out"), r);
+    }
+
+    async function runListDesks() {
+      const params = new URLSearchParams();
+      const floor = document.getElementById("desk-floor").value.trim();
+      const monitor = document.getElementById("desk-monitor").value;
+      if (floor) params.set("floor", floor);
+      if (monitor) params.set("hasMonitor", monitor);
+      const q = params.toString();
+      const r = await call("GET", "/api/desks" + (q ? "?" + q : ""));
+      show(document.getElementById("desks-status"), document.getElementById("desks-out"), r);
+    }
+
+    async function runAvailable() {
+      const date = document.getElementById("avail-date").value;
+      const r = await call("GET", "/api/desks/available?date=" + encodeURIComponent(date));
+      show(document.getElementById("avail-status"), document.getElementById("avail-out"), r);
+    }
+
+    async function runCreateBooking() {
+      const body = {
+        deskId: Number(document.getElementById("book-desk").value),
+        employeeName: document.getElementById("book-name").value,
+        date: document.getElementById("book-date").value
+      };
+      const r = await call("POST", "/api/bookings", body);
+      show(document.getElementById("create-status"), document.getElementById("create-out"), r);
+      if (r.ok && r.data && r.data.id != null) {
+        document.getElementById("cancel-id").value = r.data.id;
+      }
+    }
+
+    async function runListByDate() {
+      const date = document.getElementById("list-date").value;
+      const r = await call("GET", "/api/bookings?date=" + encodeURIComponent(date));
+      show(document.getElementById("list-date-status"), document.getElementById("list-date-out"), r);
+    }
+
+    async function runListByEmployee() {
+      const name = document.getElementById("emp-name").value;
+      const r = await call("GET", "/api/bookings?employeeName=" + encodeURIComponent(name));
+      show(document.getElementById("emp-status"), document.getElementById("emp-out"), r);
+    }
+
+    async function runCancel() {
+      const id = document.getElementById("cancel-id").value;
+      const r = await call("DELETE", "/api/bookings/" + encodeURIComponent(id));
+      if (r.status === 204) {
+        show(document.getElementById("cancel-status"), document.getElementById("cancel-out"), {
+          status: 204, ok: true, data: "(no content) 已删除"
+        });
+      } else {
+        show(document.getElementById("cancel-status"), document.getElementById("cancel-out"), r);
+      }
+    }
+  </script>
+</body>
+</html>
