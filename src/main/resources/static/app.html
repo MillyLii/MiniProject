@@ -32,23 +32,20 @@
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-label">Total Desks</span>
-                <strong id="totalDesks">0</strong>
+        <div class="stats-overview">
+            <div class="stats-left">
+                <div class="stat-card">
+                    <span class="stat-label">Total Desks</span>
+                    <strong id="totalDesks">0</strong>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Active Desks</span>
+                    <strong id="activeDesks">0</strong>
+                    <span class="stat-hint" id="activeDesksHint">Free on selected date</span>
+                </div>
             </div>
-            <div class="stat-card">
-                <span class="stat-label">Active Desks</span>
-                <strong id="activeDesks">0</strong>
-                <span class="stat-hint" id="activeDesksHint">Free on selected date</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Monitor Desks</span>
-                <strong id="monitorDesks">0</strong>
-            </div>
-            <div class="stat-card">
-                <span class="stat-label">Floors</span>
-                <strong id="floorCount">0</strong>
+            <div class="stats-floors" id="floorStats">
+                <!-- Filled by app.js: Floor N — booked/total -->
             </div>
         </div>
     </section>

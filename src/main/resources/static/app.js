@@ -97,6 +97,7 @@ async function loadDeskDatabase() {
         allDesks = await response.json();
         updateOfficeStatistics();
         updateFloorOptions();
+        await updateFloorOccupancy(dateInput.value);
     } catch (error) {
         console.error(error);
         showMessage("Unable to load office information.", true);
@@ -104,13 +105,61 @@ async function loadDeskDatabase() {
 }
 
 function updateOfficeStatistics() {
-    const totalDesks = allDesks.length;
-    const monitorDesks = allDesks.filter(desk => desk.hasMonitor).length;
-    const floors = [...new Set(allDesks.map(desk => desk.floor))];
+    document.getElementById("totalDesks").textContent = allDesks.length;
+}
 
-    document.getElementById("totalDesks").textContent = totalDesks;
-    document.getElementById("monitorDesks").textContent = monitorDesks;
-    document.getElementById("floorCount").textContent = floors.length;
+async function updateFloorOccupancy(date) {
+    const container = document.getElementById("floorStats");
+    if (!container) {
+        return;
+    }
+
+    const floors = [...new Set(allDesks.map(desk => desk.floor))]
+        .sort((a, b) => a - b)
+        .slice(0, 3);
+
+    let bookings = [];
+    if (date && isDateWithinBookingWindow(date)) {
+        try {
+            const response = await fetch(
+                `/api/bookings?date=${encodeURIComponent(date)}`
+            );
+            if (response.ok) {
+                bookings = await response.json();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const bookedDeskIds = new Set(bookings.map(booking => booking.deskId));
+
+    container.innerHTML = "";
+
+    if (floors.length === 0) {
+        container.innerHTML = `
+            <div class="stat-card floor-stat-card">
+                <span class="stat-label">Floors</span>
+                <span class="floor-ratio">—</span>
+            </div>
+        `;
+        return;
+    }
+
+    floors.forEach(floor => {
+        const desksOnFloor = allDesks.filter(desk => desk.floor === floor);
+        const total = desksOnFloor.length;
+        const booked = desksOnFloor.filter(desk => bookedDeskIds.has(desk.id)).length;
+
+        const card = document.createElement("div");
+        card.className = "stat-card floor-stat-card";
+        card.innerHTML = `
+            <span class="stat-label">Floor ${floor}</span>
+            <span class="floor-ratio">${booked}/${total}</span>
+            <span class="stat-hint">${booked} booked · ${total} desks</span>
+        `;
+        container.appendChild(card);
+    });
 }
 
 function updateFloorOptions() {
@@ -161,6 +210,7 @@ async function loadAvailableDesks() {
         if (countResponse.ok) {
             const allAvailable = await countResponse.json();
             updateActiveDesksCount(allAvailable.length, date);
+            await updateFloorOccupancy(date);
         }
     } catch (error) {
         console.error(error);
@@ -387,7 +437,7 @@ async function loadMyWeekBookings() {
         }
 
         showWeekMessage(`${bookings.length} booking(s) this week.`, false);
-        bookings.forEach(booking => renderBookingItem(booking, weekBookingList, true));
+        bookings.forEach(booking => renderBookingItem(booking, weekBookingList, false));
     } catch (error) {
         showWeekMessage(error.message, true);
     }
@@ -398,12 +448,12 @@ function isOwnBooking(booking) {
         employeeName.toLowerCase();
 }
 
-function renderBookingItem(booking, container, forceOwnCancel) {
+function renderBookingItem(booking, container, allowCancel) {
     const item = document.createElement("div");
     item.className = "booking-item";
 
     const own = isOwnBooking(booking);
-    const canCancel = forceOwnCancel || own;
+    const canCancel = allowCancel && own;
 
     const actionHtml = canCancel
         ? `<button
@@ -411,7 +461,9 @@ function renderBookingItem(booking, container, forceOwnCancel) {
                 class="danger-button"
                 onclick="cancelBooking(${booking.id})"
            >Cancel</button>`
-        : `<span class="locked-label">Others' booking</span>`;
+        : allowCancel
+            ? `<span class="locked-label">Others' booking</span>`
+            : ``;
 
     item.innerHTML = `
         <div>

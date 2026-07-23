@@ -173,10 +173,27 @@ main {
     gap: 20px;
 }
 
-.stats-grid {
+.stats-overview {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 18px;
+    align-items: stretch;
+    min-height: 220px;
+}
+
+.stats-left,
+.stats-floors {
+    display: grid;
+    gap: 18px;
+    min-height: 0;
+}
+
+.stats-left {
+    grid-template-rows: 1fr 1fr;
+}
+
+.stats-floors {
+    grid-template-rows: 1fr 1fr 1fr;
 }
 
 .stat-card {
@@ -184,6 +201,26 @@ main {
     border: 1px solid #d5deea;
     border-radius: 10px;
     background: var(--fi-snow);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+}
+
+.floor-stat-card .floor-ratio {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--fi-blue);
+}
+
+.floor-stat-card .stat-hint {
+    margin-top: 6px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
 }
 
 .stat-label {
@@ -377,7 +414,16 @@ button:disabled {
 }
 
 @media (max-width: 950px) {
-    .stats-grid,
+    .stats-overview {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .stats-left,
+    .stats-floors {
+        grid-template-rows: none;
+    }
+
     .form-row,
     .desk-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -395,7 +441,6 @@ button:disabled {
         flex-direction: column;
     }
 
-    .stats-grid,
     .form-row,
     .desk-grid,
     .booking-item {
