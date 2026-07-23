@@ -2,10 +2,18 @@
     box-sizing: border-box;
 }
 
+:root {
+    --fi-blue: #002f6c;
+    --fi-blue-dark: #001f4d;
+    --fi-blue-soft: rgba(0, 47, 108, 0.14);
+    --fi-white: #ffffff;
+    --fi-snow: #f4f7fb;
+}
+
 body {
     margin: 0;
-    background: #f3f5f7;
-    color: #202020;
+    background: var(--fi-snow);
+    color: #1a2433;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -16,8 +24,8 @@ body {
     gap: 20px;
 
     padding: 28px max(30px, calc((100% - 1300px) / 2));
-    background: #db0011;
-    color: white;
+    background: var(--fi-blue);
+    color: var(--fi-white);
 }
 
 .header-right {
@@ -31,13 +39,13 @@ body {
 .employee-badge {
     padding: 10px 16px;
     border-radius: 999px;
-    background: white;
-    color: #db0011;
+    background: var(--fi-white);
+    color: var(--fi-blue);
     font-weight: bold;
 }
 
 .logout-link {
-    color: white;
+    color: var(--fi-white);
     font-weight: bold;
     text-decoration: underline;
 }
@@ -50,8 +58,8 @@ body {
     display: inline-block;
     padding: 8px 12px;
     border-radius: 7px;
-    background: #ececec;
-    color: #666;
+    background: #e8eef5;
+    color: #4a5a6d;
     font-size: 14px;
     font-weight: bold;
 }
@@ -62,32 +70,34 @@ body {
     display: grid;
     place-items: center;
     background:
-        linear-gradient(160deg, rgba(219, 0, 17, 0.08), transparent 40%),
-        #f3f5f7;
+        linear-gradient(160deg, rgba(0, 47, 108, 0.12), transparent 42%),
+        var(--fi-snow);
 }
 
 .login-card {
     width: min(440px, calc(100% - 32px));
     padding: 36px 32px;
-    background: white;
+    background: var(--fi-white);
     border-radius: 14px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+    border: 1px solid #d5deea;
+    box-shadow: 0 8px 28px rgba(0, 47, 108, 0.12);
 }
 
 .login-card h1 {
     margin: 0;
-    color: #db0011;
+    color: var(--fi-blue);
     font-size: 40px;
 }
 
 .login-subtitle {
     margin: 8px 0 0;
     font-weight: bold;
+    color: var(--fi-blue);
 }
 
 .login-hint {
     margin: 18px 0 22px;
-    color: #666;
+    color: #5a6b7d;
 }
 
 .login-card button {
@@ -96,7 +106,7 @@ body {
 
 .login-examples {
     margin: 22px 0 0;
-    color: #888;
+    color: #7a8a9a;
     font-size: 14px;
 }
 
@@ -117,13 +127,13 @@ body {
 }
 
 .health-status.online {
-    background: white;
-    color: #087a21;
+    background: var(--fi-white);
+    color: var(--fi-blue);
 }
 
 .health-status.offline {
-    background: white;
-    color: #db0011;
+    background: var(--fi-white);
+    color: var(--fi-blue-dark);
 }
 
 main {
@@ -135,9 +145,10 @@ main {
 .card {
     margin-bottom: 26px;
     padding: 30px;
-    background: white;
+    background: var(--fi-white);
     border-radius: 12px;
-    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+    border: 1px solid #d9e2ec;
+    box-shadow: 0 3px 14px rgba(0, 47, 108, 0.06);
 }
 
 .section-heading {
@@ -147,11 +158,12 @@ main {
 .section-heading h2 {
     margin: 0;
     font-size: 30px;
+    color: var(--fi-blue);
 }
 
 .section-heading p {
     margin: 8px 0 0;
-    color: #666;
+    color: #5a6b7d;
 }
 
 .booking-heading {
@@ -169,19 +181,20 @@ main {
 
 .stat-card {
     padding: 22px;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #d5deea;
     border-radius: 10px;
-    background: #fafafa;
+    background: var(--fi-snow);
 }
 
 .stat-label {
     display: block;
     margin-bottom: 8px;
-    color: #666;
+    color: #5a6b7d;
 }
 
 .stat-card strong {
     font-size: 32px;
+    color: var(--fi-blue);
 }
 
 .form-row {
@@ -198,26 +211,27 @@ label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
+    color: var(--fi-blue);
 }
 
 input,
 select {
     width: 100%;
     padding: 13px;
-    border: 1px solid #bcbcbc;
+    border: 1px solid #b7c5d6;
     border-radius: 7px;
-    background: white;
+    background: var(--fi-white);
     font-size: 16px;
 }
 
 input:focus,
 select:focus {
-    outline: 2px solid rgba(219, 0, 17, 0.18);
-    border-color: #db0011;
+    outline: 2px solid var(--fi-blue-soft);
+    border-color: var(--fi-blue);
 }
 
 input[readonly] {
-    background: #f2f2f2;
+    background: #eef3f8;
 }
 
 button {
@@ -225,15 +239,15 @@ button {
     padding: 12px 21px;
     border: none;
     border-radius: 7px;
-    background: #db0011;
-    color: white;
+    background: var(--fi-blue);
+    color: var(--fi-white);
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
 }
 
 button:hover {
-    background: #ae000e;
+    background: var(--fi-blue-dark);
 }
 
 button:disabled {
@@ -243,16 +257,16 @@ button:disabled {
 
 .secondary-button {
     margin: 0;
-    background: #333;
+    background: #3d5470;
 }
 
 .secondary-button:hover {
-    background: #111;
+    background: var(--fi-blue-dark);
 }
 
 .danger-button {
     margin: 0;
-    background: #db0011;
+    background: var(--fi-blue);
 }
 
 .select-button {
@@ -265,15 +279,15 @@ button:disabled {
 }
 
 .success {
-    color: #087a21;
+    color: var(--fi-blue);
 }
 
 .error {
-    color: #db0011;
+    color: var(--fi-blue-dark);
 }
 
 .info {
-    color: #444;
+    color: #445566;
 }
 
 .desk-grid {
@@ -284,19 +298,20 @@ button:disabled {
 
 .desk-card {
     padding: 20px;
-    border: 1px solid #dedede;
+    border: 1px solid #d5deea;
     border-radius: 10px;
-    background: #fafafa;
+    background: var(--fi-snow);
 }
 
 .desk-card.selected {
-    border: 2px solid #db0011;
-    background: #fff5f6;
+    border: 2px solid var(--fi-blue);
+    background: #e8eef8;
 }
 
 .desk-card h3 {
     margin: 0 0 16px;
     font-size: 23px;
+    color: var(--fi-blue);
 }
 
 .desk-card p {
@@ -308,8 +323,8 @@ button:disabled {
     margin-top: 6px;
     padding: 5px 10px;
     border-radius: 999px;
-    background: #e8f6eb;
-    color: #087a21;
+    background: #e0e8f4;
+    color: var(--fi-blue);
     font-size: 13px;
     font-weight: bold;
 }
@@ -326,13 +341,14 @@ button:disabled {
     gap: 18px;
 
     padding: 18px;
-    border: 1px solid #dedede;
+    border: 1px solid #d5deea;
     border-radius: 9px;
-    background: #fafafa;
+    background: var(--fi-snow);
 }
 
 .booking-item h3 {
     margin: 0 0 6px;
+    color: var(--fi-blue);
 }
 
 .booking-item p {
@@ -340,16 +356,17 @@ button:disabled {
 }
 
 .booking-label {
-    color: #666;
+    color: #5a6b7d;
     font-size: 13px;
 }
 
 .empty-state {
     padding: 30px;
-    border: 1px dashed #bbb;
+    border: 1px dashed #9eb0c4;
     border-radius: 9px;
-    color: #666;
+    color: #5a6b7d;
     text-align: center;
+    background: var(--fi-white);
 }
 
 @media (max-width: 950px) {
