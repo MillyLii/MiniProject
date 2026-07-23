@@ -11,8 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -84,17 +87,69 @@ public class BookingController {
                 .toList();
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelBooking(@PathVariable Long id) {
-        if (!bookingRepository.existsById(id)) {
+    /**
+     * Current calendar week (Monday–Sunday) bookings for one employee.
+     */
+    @GetMapping("/week")
+    public Map<String, Object> getMyWeekBookings(
+            @RequestParam String employeeName
+    ) {
+        if (employeeName == null || employeeName.isBlank()) {
             throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Booking not found"
+                    HttpStatus.BAD_REQUEST,
+                    "employeeName is required"
             );
         }
 
-        bookingRepository.deleteById(id);
+        LocalDate today = LocalDate.now();
+        LocalDate weekStart = today.with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
+
+        List<BookingResponse> bookings = bookingRepository
+                .findByEmployeeNameIgnoreCaseAndDateBetweenOrderByDateAsc(
+                        employeeName.trim(),
+                        weekStart,
+                        weekEnd
+                )
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("employeeName", employeeName.trim());
+        body.put("weekStart", weekStart);
+        body.put("weekEnd", weekEnd);
+        body.put("bookings", bookings);
+        return body;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelBooking(
+            @PathVariable Long id,
+            @RequestParam String employeeName
+    ) {
+        if (employeeName == null || employeeName.isBlank()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "employeeName is required to cancel a booking"
+            );
+        }
+
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Booking not found"
+                ));
+
+        if (!booking.getEmployeeName().equalsIgnoreCase(employeeName.trim())) {
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You can only cancel your own bookings"
+            );
+        }
+
+        bookingRepository.delete(booking);
     }
 
     private BookingResponse toResponse(Booking booking) {

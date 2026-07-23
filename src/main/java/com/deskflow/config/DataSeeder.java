@@ -146,6 +146,22 @@ public class DataSeeder {
 
             bookingRepository.save(
                     createBooking(
+                            desk3,
+                            "Anna Kowalska",
+                            LocalDate.of(2026, 7, 21)
+                    )
+            );
+
+            bookingRepository.save(
+                    createBooking(
+                            desk12,
+                            "Anna Kowalska",
+                            LocalDate.of(2026, 7, 24)
+                    )
+            );
+
+            bookingRepository.save(
+                    createBooking(
                             desk5,
                             "Mikko Korhonen",
                             LocalDate.of(2026, 7, 23)
@@ -218,7 +234,7 @@ public class DataSeeder {
 
             bookingRepository.save(
                     createBooking(
-                            desk12,
+                            desk6,
                             "Leo Hämäläinen",
                             LocalDate.of(2026, 7, 26)
                     )
@@ -227,7 +243,7 @@ public class DataSeeder {
             System.out.println("=================================");
             System.out.println("DeskFlow database seeded");
             System.out.println("12 desks created");
-            System.out.println("11 bookings created");
+            System.out.println("Bookings seeded (incl. Anna week samples)");
             System.out.println("=================================");
         };
     }

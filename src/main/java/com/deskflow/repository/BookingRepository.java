@@ -11,4 +11,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByDate(LocalDate date);
 
     boolean existsByDeskIdAndDate(Long deskId, LocalDate date);
+
+    List<Booking> findByEmployeeNameIgnoreCaseAndDateBetweenOrderByDateAsc(
+            String employeeName,
+            LocalDate start,
+            LocalDate end
+    );
 }

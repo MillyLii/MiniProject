@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeskFlow</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<header class="main-header">
+    <div>
+        <h1>DeskFlow</h1>
+        <p>Finnish Office Hot Desk Booking</p>
+    </div>
+
+    <div class="header-right">
+        <div id="employeeBadge" class="employee-badge">Employee</div>
+        <div id="healthStatus" class="health-status">Checking API...</div>
+        <a class="logout-link" href="/">Switch user</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="card">
+        <div class="section-heading">
+            <div>
+                <h2>Office Overview</h2>
+                <p>Live information loaded from the DeskFlow database.</p>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Desks</span>
+                <strong id="totalDesks">0</strong>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Active Desks</span>
+                <strong id="activeDesks">0</strong>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Monitor Desks</span>
+                <strong id="monitorDesks">0</strong>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Floors</span>
+                <strong id="floorCount">0</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-heading booking-heading">
+            <div>
+                <h2>My Bookings This Week</h2>
+                <p id="weekRangeLabel">Your reservations from Monday to Sunday.</p>
+            </div>
+            <button id="refreshWeekButton" type="button" class="secondary-button">
+                Refresh
+            </button>
+        </div>
+        <p id="weekMessage" class="message"></p>
+        <div id="weekBookingList" class="booking-list"></div>
+    </section>
+
+    <section class="card">
+        <div class="section-heading">
+            <div>
+                <h2>Find Available Desks</h2>
+                <p>Search active desks that have not been booked.</p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date">
+            </div>
+            <div class="form-group">
+                <label for="floor">Floor</label>
+                <select id="floor">
+                    <option value="">All floors</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="monitor">Monitor</label>
+                <select id="monitor">
+                    <option value="">Any</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+        </div>
+
+        <button id="searchButton" type="button">Search Desks</button>
+        <p id="message" class="message"></p>
+        <div id="deskList" class="desk-grid"></div>
+    </section>
+
+    <section class="card" id="createBookingSection">
+        <div class="section-heading">
+            <div>
+                <h2>Create Booking</h2>
+                <p>Book a desk under your logged-in employee name.</p>
+            </div>
+        </div>
+
+        <form id="bookingForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="deskId">Desk ID</label>
+                    <input type="number" id="deskId" placeholder="Select a desk above" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="selectedDeskCode">Desk Code</label>
+                    <input type="text" id="selectedDeskCode" placeholder="No desk selected" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="employeeName">Employee Name</label>
+                    <input type="text" id="employeeName" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingDate">Booking Date</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+            </div>
+            <button type="submit">Book Desk</button>
+        </form>
+        <p id="bookingMessage" class="message"></p>
+    </section>
+
+    <section class="card">
+        <div class="section-heading booking-heading">
+            <div>
+                <h2>Bookings for Selected Date</h2>
+                <p>You can only cancel your own reservations.</p>
+            </div>
+            <button id="refreshBookingsButton" type="button" class="secondary-button">
+                Refresh
+            </button>
+        </div>
+        <p id="bookingListMessage" class="message"></p>
+        <div id="bookingList" class="booking-list"></div>
+    </section>
+
+</main>
+
+<script src="/app.js"></script>
+
+</body>
+</html>

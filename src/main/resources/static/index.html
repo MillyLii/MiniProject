@@ -3,199 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>DeskFlow</title>
-
+    <title>DeskFlow — Login</title>
     <link rel="stylesheet" href="/style.css">
 </head>
+<body class="login-page">
 
-<body>
+<main class="login-card">
+    <h1>DeskFlow</h1>
+    <p class="login-subtitle">Finnish Office Hot Desk Booking</p>
+    <p class="login-hint">Enter your employee name to open your booking workspace.</p>
 
-<header class="main-header">
-    <div>
-        <h1>DeskFlow</h1>
-        <p>Finnish Office Hot Desk Booking</p>
-    </div>
-
-    <div id="healthStatus" class="health-status">
-        Checking API...
-    </div>
-</header>
-
-<main>
-
-    <!-- Database overview -->
-    <section class="card">
-        <div class="section-heading">
-            <div>
-                <h2>Office Overview</h2>
-                <p>Live information loaded from the DeskFlow database.</p>
-            </div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span class="stat-label">Total Desks</span>
-                <strong id="totalDesks">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Active Desks</span>
-                <strong id="activeDesks">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Monitor Desks</span>
-                <strong id="monitorDesks">0</strong>
-            </div>
-
-            <div class="stat-card">
-                <span class="stat-label">Floors</span>
-                <strong id="floorCount">0</strong>
-            </div>
-        </div>
-    </section>
-
-    <!-- Availability search -->
-    <section class="card">
-        <div class="section-heading">
-            <div>
-                <h2>Find Available Desks</h2>
-                <p>Search active desks that have not been booked.</p>
-            </div>
-        </div>
-
-        <div class="form-row">
-
-            <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date">
-            </div>
-
-            <div class="form-group">
-                <label for="floor">Floor</label>
-
-                <select id="floor">
-                    <option value="">All floors</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="monitor">Monitor</label>
-
-                <select id="monitor">
-                    <option value="">Any</option>
-                    <option value="true">Yes</option>
-                    <option value="false">No</option>
-                </select>
-            </div>
-
-        </div>
-
-        <button id="searchButton" type="button">
-            Search Desks
-        </button>
-
-        <p id="message" class="message"></p>
-
-        <div id="deskList" class="desk-grid"></div>
-    </section>
-
-    <!-- Create booking -->
-    <section class="card" id="createBookingSection">
-        <div class="section-heading">
-            <div>
-                <h2>Create Booking</h2>
-                <p>Select an available desk and enter the employee name.</p>
-            </div>
-        </div>
-
-        <form id="bookingForm">
-
-            <div class="form-row">
-
-                <div class="form-group">
-                    <label for="deskId">Desk ID</label>
-
-                    <input
-                        type="number"
-                        id="deskId"
-                        placeholder="Select a desk above"
-                        readonly
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="selectedDeskCode">Desk Code</label>
-
-                    <input
-                        type="text"
-                        id="selectedDeskCode"
-                        placeholder="No desk selected"
-                        readonly
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="employeeName">Employee Name</label>
-
-                    <input
-                        type="text"
-                        id="employeeName"
-                        placeholder="For example: Anna Kowalska"
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="bookingDate">Booking Date</label>
-
-                    <input
-                        type="date"
-                        id="bookingDate"
-                        required
-                    >
-                </div>
-
-            </div>
-
-            <button type="submit">
-                Book Desk
-            </button>
-        </form>
-
-        <p id="bookingMessage" class="message"></p>
-    </section>
-
-    <!-- Existing bookings -->
-    <section class="card">
-        <div class="section-heading booking-heading">
-            <div>
-                <h2>Bookings for Selected Date</h2>
-
-                <p>
-                    Existing reservations from the database.
-                </p>
-            </div>
-
-            <button
-                id="refreshBookingsButton"
-                type="button"
-                class="secondary-button"
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="loginName">Employee Name</label>
+            <input
+                type="text"
+                id="loginName"
+                placeholder="For example: Anna Kowalska"
+                required
+                autofocus
             >
-                Refresh
-            </button>
         </div>
 
-        <p id="bookingListMessage" class="message"></p>
+        <button type="submit">Continue</button>
+        <p id="loginMessage" class="message"></p>
+    </form>
 
-        <div id="bookingList" class="booking-list"></div>
-    </section>
-
+    <p class="login-examples">
+        Seeded examples: Anna Kowalska · Mikko Korhonen · Sofia Virtanen
+    </p>
 </main>
 
-<script src="/app.js"></script>
+<script>
+    const form = document.getElementById("loginForm");
+    const nameInput = document.getElementById("loginName");
+    const message = document.getElementById("loginMessage");
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = nameInput.value.trim();
+
+        if (!name) {
+            message.textContent = "Employee name cannot be blank.";
+            message.className = "message error";
+            return;
+        }
+
+        window.location.href =
+            "/app.html?employee=" + encodeURIComponent(name);
+    });
+</script>
 
 </body>
 </html>

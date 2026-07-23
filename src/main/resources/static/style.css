@@ -20,6 +20,86 @@ body {
     color: white;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.employee-badge {
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: white;
+    color: #db0011;
+    font-weight: bold;
+}
+
+.logout-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.logout-link:hover {
+    opacity: 0.85;
+}
+
+.locked-label {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 7px;
+    background: #ececec;
+    color: #666;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Login */
+.login-page {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    background:
+        linear-gradient(160deg, rgba(219, 0, 17, 0.08), transparent 40%),
+        #f3f5f7;
+}
+
+.login-card {
+    width: min(440px, calc(100% - 32px));
+    padding: 36px 32px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
+}
+
+.login-card h1 {
+    margin: 0;
+    color: #db0011;
+    font-size: 40px;
+}
+
+.login-subtitle {
+    margin: 8px 0 0;
+    font-weight: bold;
+}
+
+.login-hint {
+    margin: 18px 0 22px;
+    color: #666;
+}
+
+.login-card button {
+    width: 100%;
+}
+
+.login-examples {
+    margin: 22px 0 0;
+    color: #888;
+    font-size: 14px;
+}
+
 .main-header h1 {
     margin: 0;
     font-size: 38px;
